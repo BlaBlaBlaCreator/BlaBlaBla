@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geppetto e la Volpe</title>
+  <style>
+    body { margin: 0; background: #111; }
+    canvas { display: block; margin: auto; }
+  </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+<script>
+  const app = new PIXI.Application({ width: 720, height: 1280, backgroundColor: 0xfbf5dc });
+  document.body.appendChild(app.view);
+
+  PIXI.Assets.add('logo', 'logo.png');
+
+  PIXI.Assets.load('logo').then(() => {
+    const logo = PIXI.Sprite.from('logo');
+    logo.anchor.set(0.5);
+    logo.x = app.screen.width / 2;
+    logo.y = app.screen.height / 2 - 100;
+    logo.alpha = 0;
+    logo.scale.set(0.8);
+    app.stage.addChild(logo);
+
+    // Fade-in + zoom-in
+    app.ticker.add(() => {
+      if (logo.alpha < 1) logo.alpha += 0.02;
+      if (logo.scale.x < 1) logo.scale.set(logo.scale.x + 0.005);
+    });
+
+    // Testo sovrapposto dopo 3s
+    setTimeout(() => {
+      const style = new PIXI.TextStyle({
+        fontFamily: 'Comic Sans MS',
+        fontSize: 36,
+        fill: '#333',
+        align: 'center',
+        wordWrap: true,
+        wordWrapWidth: 600
+      });
+      const text = new PIXI.Text('Benvenuti in Geppetto e la Volpe. Qui le canzoni incontrano le storie, con un tocco di ingegno e un pizzico di magia.', style);
+      text.anchor.set(0.5);
+      text.x = app.screen.width / 2;
+      text.y = app.screen.height - 100;
+      text.alpha = 0;
+      app.stage.addChild(text);
+
+      // Fade in del testo
+      app.ticker.add(() => {
+        if (text.alpha < 1) text.alpha += 0.01;
+      });
+    }, 3000);
+  });
+</script>
+</body>
+</html>
