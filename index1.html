@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geppetto e la Volpe</title>
+  <style>
+    body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+<script>
+  const app = new PIXI.Application({ width: 720, height: 720, backgroundColor: 0xfbf5dc });
+  document.body.appendChild(app.view);
+
+  const img = new Image();
+  img.src = 'logo.png';
+  img.onload = () => {
+    const texture = PIXI.Texture.from(img);
+    const logo = new PIXI.Sprite(texture);
+    logo.anchor.set(0.5);
+    logo.x = app.screen.width / 2;
+    logo.y = app.screen.height / 2;
+    logo.alpha = 0;
+    logo.scale.set(0.8);
+    app.stage.addChild(logo);
+
+    // Prima scena
+    const style1 = new PIXI.TextStyle({
+      fontFamily: 'Comic Sans MS',
+      fontSize: 28,
+      fill: '#333',
+      align: 'center',
+      wordWrap: true,
+      wordWrapWidth: 600
+    });
+    const text1 = new PIXI.Text('Benvenuti in Geppetto e la Volpe.\nQui le canzoni incontrano le storie,\ncon un tocco di ingegno e un pizzico di magia.', style1);
+    text1.anchor.set(0.5);
+    text1.x = logo.x;
+    text1.y = logo.y;
+    text1.alpha = 0;
+
+    // Seconda scena
+    const style2 = new PIXI.TextStyle({
+      fontFamily: 'Comic Sans MS',
+      fontSize: 30,
+      fill: '#222',
+      align: 'center',
+      wordWrap: true,
+      wordWrapWidth: 600
+    });
+    const text2 = new PIXI.Text('Io sono la Volpe.\nE uso ogni trucco per far suonare meglio le mie storie.', style2);
+    text2.anchor.set(0.5);
+    text2.x = logo.x;
+    text2.y = logo.y;
+    text2.alpha = 0;
+
+    app.stage.addChild(text1);
+    app.stage.addChild(text2);
+
+    // Animazioni
+    let counter = 0;
+    app.ticker.add(() => {
+      if (logo.alpha < 1) logo.alpha += 0.02;
+      if (logo.scale.x < 1) logo.scale.set(logo.scale.x + 0.005);
+
+      // Prima scritta fade-in
+      if (logo.alpha > 0.5 && text1.alpha < 1 && counter < 250) {
+        text1.alpha += 0.01;
+      }
+
+      // Dopo 5 secondi (circa 300 tick), fade-out prima, fade-in seconda
+      if (counter === 300) {
+        fadeOut(text1);
+      }
+      if (counter === 360) {
+        fadeIn(text2);
+      }
+      counter++;
+    });
+
+    function fadeOut(displayObject) {
+      let t = 0;
+      const fade = () => {
+        if (t < 1) {
+          displayObject.alpha -= 0.02;
+          t += 0.02;
+          requestAnimationFrame(fade);
+        }
+      };
+      fade();
+    }
+
+    function fadeIn(displayObject) {
+      let t = 0;
+      const fade = () => {
+        if (t < 1) {
+          displayObject.alpha += 0.02;
+          t += 0.02;
+          requestAnimationFrame(fade);
+        }
+      };
+      fade();
+    }
+  };
+</script>
+</body>
+</html>
